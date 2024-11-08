@@ -123,11 +123,12 @@ export default function SignIn() {
             paddingLeft: "40px",
             paddingRight: "40px",
             marginBottom: "30px",
+            lineHeight: "1.5",
           }}
         >
           <span style={{ marginBottom: "20px" }}>Welcome to SmartResume</span>{" "}
           <br />
-          where your skills meet AI-driven insights to create and analyze a
+          Where your skills meet AI-driven insights to create and analyze a
           resume that stands out. <br /> Let’s build your path to success!
         </h2>
 
