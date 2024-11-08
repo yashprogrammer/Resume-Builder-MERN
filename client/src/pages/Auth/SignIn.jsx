@@ -109,25 +109,48 @@ export default function SignIn() {
 
   return (
     <div style={styles.container} className="text-center">
-      <div>
-        <button style={styles.button} onClick={handleGoogle}>
-          {loading ? (
-            <CircularProgress size={28} />
-          ) : (
-            <>
-              <p style={styles.text}>Build your Resume</p>
-            </>
-          )}
-        </button>
-        <button style={styles.button} onClick={handleGoogle}>
-          {loading ? (
-            <CircularProgress size={28} />
-          ) : (
-            <>
-              <p style={styles.text}>Analyse your resume</p>
-            </>
-          )}
-        </button>
+      <div
+        style={{
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <h2
+          style={{
+            textAlign: "center",
+            paddingLeft: "40px",
+            paddingRight: "40px",
+            marginBottom: "30px",
+          }}
+        >
+          <span style={{ marginBottom: "20px" }}>Welcome to SmartResume</span>{" "}
+          <br />
+          where your skills meet AI-driven insights to create and analyze a
+          resume that stands out. <br /> Let’s build your path to success!
+        </h2>
+
+        <div>
+          <button style={styles.button} onClick={handleGoogle}>
+            {loading ? (
+              <CircularProgress size={28} />
+            ) : (
+              <>
+                <p style={styles.text}>Build your Resume</p>
+              </>
+            )}
+          </button>
+          <button style={styles.button} onClick={handleGoogle}>
+            {loading ? (
+              <CircularProgress size={28} />
+            ) : (
+              <>
+                <p style={styles.text}>Analyse your resume</p>
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -137,6 +160,7 @@ const styles = {
   container: {
     position: "relative",
     display: "flex",
+    flexDirection: "column",
     alignItems: "center",
     height: "85vh",
     justifyContent: "space-evenly",
@@ -147,14 +171,14 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     padding: "12px 21px",
-    borderRadius: "5px",
-    marginLeft: "60px",
-    border: "black 2px solid",
-    backgroundColor: "#fff",
+    borderRadius: "50px",
+    // border: "black 2px solid",
+    backgroundColor: "#EBCA37",
     color: "#fff",
     cursor: "pointer",
     width: "320px",
     zIndex: 1,
+    marginBottom: "25px",
   },
   text: {
     fontSize: "18px",
