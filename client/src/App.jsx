@@ -33,10 +33,11 @@ function App() {
             <Navbar />
             <Routes>
               <Route path="/" element={<LandingPage />} />
-              <Route path="/sign-in" element={<SignIn />} />
-              <Route path="/resume-analyzer" element={<ResumeAnalyzer />} />
 
               <Route element={<Layout />}>
+                <Route path="/sign-in" element={<SignIn />} />
+
+                <Route path="/resume-analyzer" element={<ResumeAnalyzer />} />
                 <Route path="/user-profile" element={<UserProfile />} />
                 <Route path="/templates" element={<Templates />} />
                 {/* <Route path='/create-resume' element={<Home />} /> */}

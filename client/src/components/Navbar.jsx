@@ -22,15 +22,21 @@ import EditIcon from "@mui/icons-material/Edit";
 import DescriptionIcon from "@mui/icons-material/Description";
 import LogoutIcon from "@mui/icons-material/Logout";
 import logo from "../assets/profile.png";
-import { logoutUser } from "../redux/userSlice";
+import {
+  logoutUser,
+  signInSuccess,
+  signInFailure,
+  signInStart,
+} from "../redux/userSlice";
 import { clearEducation } from "../redux/educationSlice";
 import { clearProjects } from "../redux/projectSlice";
 import { clearExperience } from "../redux/experienceSlice";
+import { clearProfile } from "../redux/profileSlice";
 import { clearExtraDetails } from "../redux/extraDetailsSlice";
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/Navbar.css";
-import { clearProfile } from "../redux/profileSlice";
 
 const Navbar = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -48,6 +54,10 @@ const Navbar = () => {
     setSectionsAnchorEl(event.currentTarget);
   };
 
+  const handleAnalyzeClick = () => {
+    navigate("/resume-analyzer");
+  };
+
   const handleProfileClick = () => {
     navigate("/user-profile");
     setAnchorEl(null);
@@ -57,6 +67,7 @@ const Navbar = () => {
     navigate("/contact-us");
     setAnchorEl(null);
   };
+
   const handleTemplateClick = () => {
     navigate("/templates");
     setAnchorEl(null);
@@ -86,7 +97,46 @@ const Navbar = () => {
     dispatch(clearExperience());
     dispatch(clearExtraDetails());
   };
-  // console.log(currentUser);
+
+  // Google Sign-In
+  const handleGoogleSignIn = async () => {
+    try {
+      dispatch(signInStart());
+      const provider = new GoogleAuthProvider();
+      const auth = getAuth();
+      const result = await signInWithPopup(auth, provider);
+      const user = {
+        username: result.user.displayName,
+        email: result.user.email,
+        avatar: result.user.photoURL,
+      };
+      dispatch(signInSuccess(user)); // Update the user in Redux store
+      toast.success("Login Successful!", {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      navigate("/sign-in"); // Redirect to the sign-in page
+    } catch (error) {
+      dispatch(signInFailure(error.message));
+      toast.error("Login failed. Please try again.", {
+        position: "top-left",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   return (
     <nav className="nav-container">
       <AppBar
@@ -109,56 +159,47 @@ const Navbar = () => {
             open={isDrawerOpen}
             onClose={() => setIsDrawerOpen(false)}
           >
-            {currentUser !== null ? (
-              <>
-                <List>
-                  <ListItem
-                    button
-                    component={Link}
-                    to="/"
-                    onClick={handleClose}
-                  >
-                    <ListItemIcon>
-                      <HomeIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Home" />
-                  </ListItem>
-                  <ListItem
-                    button
-                    component={Link}
-                    to="/profile"
-                    onClick={handleClose}
-                  >
-                    <ListItemIcon>
-                      <EditIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Edit Resume" />
-                  </ListItem>
-                  <ListItem
-                    button
-                    component={Link}
-                    to="/templates"
-                    onClick={handleClose}
-                  >
-                    <ListItemIcon>
-                      <DescriptionIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Templates" />
-                  </ListItem>
-                  <ListItem button onClick={handleLogout}>
-                    <ListItemIcon>
-                      <LogoutIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Logout" />
-                  </ListItem>
-                </List>
-              </>
+            {currentUser ? (
+              <List>
+                <ListItem button component={Link} to="/" onClick={handleClose}>
+                  <ListItemIcon>
+                    <HomeIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Home" />
+                </ListItem>
+                <ListItem
+                  button
+                  component={Link}
+                  to="/profile"
+                  onClick={handleClose}
+                >
+                  <ListItemIcon>
+                    <EditIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Edit Resume" />
+                </ListItem>
+                <ListItem
+                  button
+                  component={Link}
+                  to="/templates"
+                  onClick={handleClose}
+                >
+                  <ListItemIcon>
+                    <DescriptionIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Templates" />
+                </ListItem>
+                <ListItem button onClick={handleLogout}>
+                  <ListItemIcon>
+                    <LogoutIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Logout" />
+                </ListItem>
+              </List>
             ) : (
-              <>
-                <div className="drawer-div">
-                  <h3>Login Please!</h3>
-                </div>
-              </>
+              <div className="drawer-div">
+                <h3>Login Please!</h3>
+              </div>
             )}
           </Drawer>
 
@@ -166,8 +207,8 @@ const Navbar = () => {
             className="logo"
             src={logo}
             alt="resume"
-            width={"40px"}
-            height={"40px"}
+            width="40px"
+            height="40px"
           />
           <Typography
             className="logo-text"
@@ -180,13 +221,15 @@ const Navbar = () => {
             }}
           >
             <Link to={"/"} className="resume-builder-link">
-              {" "}
               SMART RESUME
             </Link>
           </Typography>
 
           {currentUser ? (
             <>
+              <Button color="inherit" onClick={handleAnalyzeClick}>
+                Analyse Resume
+              </Button>
               <Button color="inherit" onClick={handleSectionsClick}>
                 Sections
               </Button>
@@ -194,14 +237,8 @@ const Navbar = () => {
                 anchorEl={sectionsAnchorEl}
                 open={Boolean(sectionsAnchorEl)}
                 onClose={handleClose}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
               >
                 <MenuItem
                   onClick={() => {
@@ -256,14 +293,8 @@ const Navbar = () => {
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
               >
                 <MenuItem onClick={handleProfileClick}>My Profile</MenuItem>
                 <MenuItem onClick={handleTemplateClick}>Templates</MenuItem>
@@ -272,9 +303,9 @@ const Navbar = () => {
               </Menu>
             </>
           ) : (
-            <Link to={"/sign-in"} className="login-link">
-              <Button color="inherit">Login</Button>
-            </Link>
+            <Button color="inherit" onClick={handleGoogleSignIn}>
+              Login
+            </Button>
           )}
         </Toolbar>
       </AppBar>

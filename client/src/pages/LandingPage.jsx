@@ -8,33 +8,17 @@ import img1 from "../assets/img1.jpg";
 import img2 from "../assets/img2.jpg";
 import img3 from "../assets/img3.jpg";
 import { useDispatch, useSelector } from "react-redux";
-import { updateEducation } from "../redux/educationSlice";
-import { updateProfile } from "../redux/profileSlice";
-import { updateProject } from "../redux/projectSlice";
-import { updateExperience } from "../redux/experienceSlice";
-import axios from "axios";
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
+import { signInFailure, signInStart, signInSuccess } from "../redux/userSlice";
 import { BASE_URL } from "../api";
-import {
-  updateAchievements,
-  updateExtraCoCurricular,
-  updateSkills,
-} from "../redux/extraDetailsSlice";
+import axios from "axios";
 
 const theme = createTheme({
   palette: {
-    primary: {
-      main: "#1976d2",
-    },
-    secondary: {
-      main: "#ff6f61",
-    },
-    background: {
-      default: "#ffecd6",
-    },
-    text: {
-      primary: "#333333",
-      secondary: "#555555",
-    },
+    primary: { main: "#1976d2" },
+    secondary: { main: "#ff6f61" },
+    background: { default: "#ffecd6" },
+    text: { primary: "#333333", secondary: "#555555" },
   },
 });
 
@@ -43,68 +27,39 @@ export default function LandingPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const getAllResumeData = async () => {
-    // console.log('entered');
+  useEffect(() => {
+    // If user is logged in, redirect to the sign-in route
+    if (currentUser) {
+      navigate("/sign-in");
+    }
+  }, [currentUser, navigate]);
+
+  const handleGoogleSignIn = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/data/get-all-resume-data?id=${currentUser._id}`,
-        {
-          headers: {
-            authorization: currentUser.token,
-          },
-        }
+      dispatch(signInStart());
+      const provider = new GoogleAuthProvider();
+      const auth = getAuth();
+      const result = await signInWithPopup(auth, provider);
+      const formData = {
+        username: result.user.displayName,
+        email: result.user.email,
+        avatar: result.user.photoURL,
+      };
+      const response = await axios.post(
+        `${BASE_URL}/auth/google-sign-in`,
+        formData
       );
-      // console.log("response: ", response.data.resumeData[0]);
-      const resumeData = response.data.resumeData[0];
-      // console.log('Education:', resumeData.education[0])
-      if (resumeData) {
-        dispatch(updateProfile(resumeData.profile));
-        dispatch(updateEducation(resumeData.education[0]));
-        resumeData.projects.forEach((project, index) => {
-          Object.keys(project).forEach((field) => {
-            dispatch(updateProject({ index, field, value: project[field] }));
-          });
-        });
-
-        // Assuming resumeData.experience is an array
-        resumeData.experience.forEach((experience, index) => {
-          Object.keys(experience).forEach((field) => {
-            dispatch(
-              updateExperience({ index, field, value: experience[field] })
-            );
-          });
-        });
-        const { skills, achievements, extraCoCurricular } =
-          resumeData.extraDetails;
-        // Update skills
-        // console.log(skills);
-        Object.keys(skills).forEach((type) => {
-          skills[type].forEach((skill, index) => {
-            dispatch(updateSkills({ type, index, value: skill }));
-          });
-        });
-
-        // Update achievements
-        achievements.forEach((achievement, index) => {
-          dispatch(updateAchievements({ index, value: achievement }));
-        });
-
-        // Update extra co-curricular activities
-        extraCoCurricular.forEach((activity, index) => {
-          dispatch(updateExtraCoCurricular({ index, value: activity }));
-        });
-      }
+      dispatch(signInSuccess(response.data.user));
+      navigate("/sign-in");
     } catch (error) {
-      console.error("Error in getAllResumeData:", error);
+      console.error("Google Sign-In Error:", error);
+      dispatch(signInFailure(error.message));
     }
   };
 
-  useEffect(() => {
-    getAllResumeData();
-  }, []);
-
   const handleGetStarted = () => {
-    navigate("/profile");
+    // If user is not logged in, initiate Google Sign-In
+    handleGoogleSignIn();
   };
 
   return (
@@ -118,7 +73,6 @@ export default function LandingPage() {
             <div className="image-container-2">
               <img src={img2} alt="image1" className="image-style-2" />
             </div>
-
             <div className="image-container-3">
               <img src={img3} alt="image1" className="image-style-3" />
             </div>
