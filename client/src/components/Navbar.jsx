@@ -1,24 +1,35 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Avatar, Menu, MenuItem, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import {
+  Button,
+  Avatar,
+  Menu,
+  MenuItem,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import MenuIcon from '@mui/icons-material/Menu';
-import HomeIcon from '@mui/icons-material/Home';
-import EditIcon from '@mui/icons-material/Edit';
-import DescriptionIcon from '@mui/icons-material/Description';
-import LogoutIcon from '@mui/icons-material/Logout';
+import MenuIcon from "@mui/icons-material/Menu";
+import HomeIcon from "@mui/icons-material/Home";
+import EditIcon from "@mui/icons-material/Edit";
+import DescriptionIcon from "@mui/icons-material/Description";
+import LogoutIcon from "@mui/icons-material/Logout";
 import logo from "../assets/profile.png";
 import { logoutUser } from "../redux/userSlice";
 import { clearEducation } from "../redux/educationSlice";
 import { clearProjects } from "../redux/projectSlice";
 import { clearExperience } from "../redux/experienceSlice";
 import { clearExtraDetails } from "../redux/extraDetailsSlice";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import '../styles/Navbar.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../styles/Navbar.css";
 import { clearProfile } from "../redux/profileSlice";
 
 const Navbar = () => {
@@ -38,16 +49,16 @@ const Navbar = () => {
   };
 
   const handleProfileClick = () => {
-    navigate('/user-profile');
+    navigate("/user-profile");
     setAnchorEl(null);
   };
 
   const handleContactUsClick = () => {
-    navigate('/contact-us');
+    navigate("/contact-us");
     setAnchorEl(null);
   };
   const handleTemplateClick = () => {
-    navigate('/templates');
+    navigate("/templates");
     setAnchorEl(null);
   };
 
@@ -78,7 +89,10 @@ const Navbar = () => {
   // console.log(currentUser);
   return (
     <nav className="nav-container">
-      <AppBar position="static" style={{ backgroundColor: 'var(--bgColor)', color: 'black', }}>
+      <AppBar
+        position="static"
+        style={{ backgroundColor: "var(--bgColor)", color: "black" }}
+      >
         <Toolbar>
           <div className="menu-icon">
             <IconButton
@@ -98,25 +112,40 @@ const Navbar = () => {
             {currentUser !== null ? (
               <>
                 <List>
-                  <ListItem button component={Link} to="/" onClick={handleClose}>
+                  <ListItem
+                    button
+                    component={Link}
+                    to="/"
+                    onClick={handleClose}
+                  >
                     <ListItemIcon>
                       <HomeIcon />
                     </ListItemIcon>
                     <ListItemText primary="Home" />
                   </ListItem>
-                  <ListItem button component={Link} to="/profile" onClick={handleClose}>
+                  <ListItem
+                    button
+                    component={Link}
+                    to="/profile"
+                    onClick={handleClose}
+                  >
                     <ListItemIcon>
                       <EditIcon />
                     </ListItemIcon>
                     <ListItemText primary="Edit Resume" />
                   </ListItem>
-                  <ListItem button component={Link} to="/templates" onClick={handleClose}>
+                  <ListItem
+                    button
+                    component={Link}
+                    to="/templates"
+                    onClick={handleClose}
+                  >
                     <ListItemIcon>
                       <DescriptionIcon />
                     </ListItemIcon>
                     <ListItemText primary="Templates" />
                   </ListItem>
-                  <ListItem button onClick={handleLogout} >
+                  <ListItem button onClick={handleLogout}>
                     <ListItemIcon>
                       <LogoutIcon />
                     </ListItemIcon>
@@ -129,10 +158,17 @@ const Navbar = () => {
                 <div className="drawer-div">
                   <h3>Login Please!</h3>
                 </div>
-              </>)}
+              </>
+            )}
           </Drawer>
 
-          <img className="logo" src={logo} alt="resume" width={"40px"} height={"40px"} />
+          <img
+            className="logo"
+            src={logo}
+            alt="resume"
+            width={"40px"}
+            height={"40px"}
+          />
           <Typography
             className="logo-text"
             variant="h5"
@@ -143,7 +179,10 @@ const Navbar = () => {
               fontWeight: "600",
             }}
           >
-            <Link to={'/'} className="resume-builder-link"> RESUME BUILDER</Link>
+            <Link to={"/"} className="resume-builder-link">
+              {" "}
+              SMART RESUME
+            </Link>
           </Typography>
 
           {currentUser ? (
@@ -156,19 +195,54 @@ const Navbar = () => {
                 open={Boolean(sectionsAnchorEl)}
                 onClose={handleClose}
                 anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
+                  vertical: "bottom",
+                  horizontal: "right",
                 }}
                 transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
+                  vertical: "top",
+                  horizontal: "right",
                 }}
               >
-                <MenuItem onClick={() => { navigate('/profile'); handleClose(); }}>Profile</MenuItem>
-                <MenuItem onClick={() => { navigate('/education'); handleClose(); }}>Education</MenuItem>
-                <MenuItem onClick={() => { navigate('/projects'); handleClose(); }}>Projects</MenuItem>
-                <MenuItem onClick={() => { navigate('/experience'); handleClose(); }}>Experience</MenuItem>
-                <MenuItem onClick={() => { navigate('/extraDetails'); handleClose(); }}>Extra Details</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/profile");
+                    handleClose();
+                  }}
+                >
+                  Profile
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/education");
+                    handleClose();
+                  }}
+                >
+                  Education
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/projects");
+                    handleClose();
+                  }}
+                >
+                  Projects
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/experience");
+                    handleClose();
+                  }}
+                >
+                  Experience
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/extraDetails");
+                    handleClose();
+                  }}
+                >
+                  Extra Details
+                </MenuItem>
               </Menu>
               <div className="avatar-container">
                 <Avatar
@@ -183,12 +257,12 @@ const Navbar = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
                 anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
+                  vertical: "bottom",
+                  horizontal: "right",
                 }}
                 transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
+                  vertical: "top",
+                  horizontal: "right",
                 }}
               >
                 <MenuItem onClick={handleProfileClick}>My Profile</MenuItem>
@@ -198,7 +272,7 @@ const Navbar = () => {
               </Menu>
             </>
           ) : (
-            <Link to={'/sign-in'} className="login-link">
+            <Link to={"/sign-in"} className="login-link">
               <Button color="inherit">Login</Button>
             </Link>
           )}
