@@ -5,7 +5,6 @@ const mongoDB = require("./config/db");
 const authRoutes = require("./routes/auth.route");
 const userRoutes = require("./routes/user.route");
 const resumeRoutes = require("./routes/resume.route");
-const path = require('path');
 
 const app = express();
 
@@ -18,8 +17,6 @@ mongoDB();
 app.use(express.json());
 
 // Corrected path handling
-const buildPath = path.join(__dirname, "../client/dist");
-app.use(express.static(buildPath));
 
 //middlewares
 app.use(cors({
