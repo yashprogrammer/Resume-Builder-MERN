@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -18,19 +18,25 @@ import PersonIcon from "@mui/icons-material/Person";
 import HomeIcon from "@mui/icons-material/Home";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProfile } from "../redux/profileSlice";
-import { Link } from 'react-router-dom';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Link } from "react-router-dom";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 const Profile = () => {
   const dispatch = useDispatch();
-  const currentProfile = useSelector((state) => state.profileDetails);
+  // Get profile details from the Redux store
+  const currentProfile = useSelector(
+    (state) => state.user.currentUser?.resumeData?.[0]?.profile || {}
+  );
 
-  // console.log("Profilepage:", currentProfile);
-
+  // Handle input changes and dispatch update action
   const handleChange = (event) => {
     const { name, value } = event.target;
     dispatch(updateProfile({ [name]: value }));
   };
+
+  useEffect(() => {
+    console.log("Current Redux State:", currentProfile);
+  }, [currentProfile]);
 
   const containerStyle = {
     marginTop: "30",
@@ -63,7 +69,7 @@ const Profile = () => {
                 label="FirstName"
                 style={{ width: "100%" }}
                 required
-                value={currentProfile?.firstName}
+                value={currentProfile.firstName || ""}
                 onChange={handleChange}
                 InputProps={{
                   endAdornment: (
@@ -85,7 +91,7 @@ const Profile = () => {
                 label="LastName"
                 style={{ width: "100%" }}
                 required
-                value={currentProfile?.lastName}
+                value={currentProfile.lastName || ""}
                 onChange={handleChange}
                 InputProps={{
                   endAdornment: (
@@ -109,7 +115,7 @@ const Profile = () => {
                 label="Email"
                 style={{ width: "100%" }}
                 required
-                value={currentProfile?.email}
+                value={currentProfile.email || ""}
                 onChange={handleChange}
                 InputProps={{
                   endAdornment: (
@@ -131,7 +137,7 @@ const Profile = () => {
                 label="MobileNo"
                 style={{ width: "100%" }}
                 required
-                value={currentProfile?.mobile}
+                value={currentProfile.mobile || ""}
                 onChange={handleChange}
                 InputProps={{
                   endAdornment: (
@@ -145,32 +151,6 @@ const Profile = () => {
               />
             </Grid>
           </Grid>
-          {/* <Grid container spacing={2} alignItems="center" lg={12}>
-            <Grid item md={12} sm={12} xs={12} lg={12}>
-              <TextField
-                margin="dense"
-                variant="outlined"
-                type="text"
-                name="aboutMe"
-                label="About Me"
-                multiline
-                rows={2}
-                fullWidth
-                style={{ width: "100%" }}
-                value={currentProfile?.aboutMe}
-                onChange={handleChange}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton>
-                        <PersonIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-          </Grid> */}
           <Grid container spacing={2} alignItems="center" lg={12}>
             <Grid item md={12} sm={12} xs={12} lg={12}>
               <TextField
@@ -183,7 +163,7 @@ const Profile = () => {
                 rows={1}
                 fullWidth
                 style={{ width: "100%" }}
-                value={currentProfile?.address}
+                value={currentProfile.address || ""}
                 onChange={handleChange}
                 InputProps={{
                   endAdornment: (
@@ -206,7 +186,7 @@ const Profile = () => {
                 name="linkedIn"
                 label="Linked In"
                 style={{ width: "100%" }}
-                value={currentProfile?.linkedIn}
+                value={currentProfile.linkedIn || ""}
                 onChange={handleChange}
                 InputProps={{
                   endAdornment: (
@@ -227,7 +207,7 @@ const Profile = () => {
                 name="github"
                 label="Github"
                 style={{ width: "100%" }}
-                value={currentProfile?.github}
+                value={currentProfile.github || ""}
                 onChange={handleChange}
                 InputProps={{
                   endAdornment: (
@@ -250,7 +230,7 @@ const Profile = () => {
                 name="codechef"
                 label="Codechef"
                 style={{ width: "100%" }}
-                value={currentProfile?.codechef}
+                value={currentProfile.codechef || ""}
                 onChange={handleChange}
                 InputProps={{
                   endAdornment: (
@@ -271,7 +251,7 @@ const Profile = () => {
                 name="leetcode"
                 label="Leetcode"
                 style={{ width: "100%" }}
-                value={currentProfile?.leetcode}
+                value={currentProfile.leetcode || ""}
                 onChange={handleChange}
                 InputProps={{
                   endAdornment: (
@@ -294,7 +274,7 @@ const Profile = () => {
                 name="codeforces"
                 label="Codeforces"
                 style={{ width: "100%" }}
-                value={currentProfile?.codeforces}
+                value={currentProfile.codeforces || ""}
                 onChange={handleChange}
                 InputProps={{
                   endAdornment: (
@@ -309,12 +289,11 @@ const Profile = () => {
             </Grid>
           </Grid>
         </div>
-
       </CardContent>
 
-      <Grid container spacing={2} alignItems="center" lg={12} >
+      <Grid container spacing={2} alignItems="center" lg={12}>
         <Grid item md={12} sm={12} xs={12} lg={12} style={containerStyles}>
-          <Link to={'/education'} style={linkStyle}>
+          <Link to={"/education"} style={linkStyle}>
             <h4>Education Section</h4>
             <ArrowForwardIcon style={iconStyle} />
           </Link>
@@ -325,28 +304,29 @@ const Profile = () => {
 };
 
 const linkStyle = {
-  textDecoration: 'none',
-  color: 'inherit',
-  display: 'flex',
-  justifyContent: 'end',
-  alignItems: 'center',
-  gap: '5px',
-  transition: 'border-radius 0.3s', // Add transition for border-radius
-  borderRadius: '4px', // Initial border-radius
-  padding: '5px', // Add padding for hover effect
+  textDecoration: "none",
+  color: "inherit",
+  display: "flex",
+  justifyContent: "end",
+  alignItems: "center",
+  gap: "5px",
+  transition: "border-radius 0.3s", // Add transition for border-radius
+  borderRadius: "4px", // Initial border-radius
+  padding: "5px", // Add padding for hover effect
 };
 
 const containerStyles = {
-  marginBottom: '20px',
-  display: 'flex',
-  justifyContent: 'end',
-  alignItems: 'center',
-  // backgroundColor: 'crimson',
-  marginTop: '20px',
-  paddingRight: '40px',
+  marginBottom: "20px",
+  display: "flex",
+  justifyContent: "end",
+  alignItems: "center",
+  marginTop: "20px",
+  paddingRight: "40px",
 };
+
 const iconStyle = {
-  verticalAlign: 'middle', // Align icon vertically with text
-  marginLeft: '5px', // Add margin between icon and text
+  verticalAlign: "middle", // Align icon vertically with text
+  marginLeft: "5px", // Add margin between icon and text
 };
+
 export default Profile;

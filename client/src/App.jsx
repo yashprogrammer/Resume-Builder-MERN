@@ -22,6 +22,8 @@ import ExtraDetails from "./components/ExtraDetails";
 import ResumeLayout from "./components/ResumeLayout";
 import ErrorPage from "./pages/ErrorPage";
 import ResumeAnalyzer from "./components/ResumeAnalyzer";
+// import TestAPIComponent from "./components/TestAPIComponent";
+
 // import Demo from './pages/Demo';
 
 function App() {
@@ -31,6 +33,7 @@ function App() {
         <PersistGate loading={null} persistor={persistor}>
           <BrowserRouter>
             <Navbar />
+            {/* <TestAPIComponent /> */}
             <Routes>
               <Route path="/" element={<LandingPage />} />
 

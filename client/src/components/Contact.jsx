@@ -56,7 +56,7 @@ const Contact = () => {
             >
               <Call />
             </IconButton>
-            <Typography>Phone: 9356678182</Typography>
+            <Typography>Phone: 9144986986</Typography>
           </div>
 
           <div
@@ -76,7 +76,7 @@ const Contact = () => {
             >
               <MailOutline />
             </IconButton>
-            <Typography>Email: abhijitkhyade@gmail.com</Typography>
+            <Typography>Email: yashpatil@smartresume.com</Typography>
           </div>
 
           <div
@@ -96,13 +96,13 @@ const Contact = () => {
               }}
               onClick={() =>
                 handleSocialMediaClick(
-                    "https://www.linkedin.com/in/abhijit-khyade-954b9324b"
+                  "https://www.linkedin.com/in/yash-patil-ux/"
                 )
               }
             >
               <LinkedIn />
             </IconButton>
-            <Typography>Linkden</Typography>
+            <Typography>Linkedin</Typography>
           </div>
         </CardContent>
       </Card>

@@ -58,7 +58,6 @@ export default function LandingPage() {
   };
 
   const handleGetStarted = () => {
-    // If user is not logged in, initiate Google Sign-In
     handleGoogleSignIn();
   };
 
