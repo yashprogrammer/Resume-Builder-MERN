@@ -8,10 +8,11 @@ import img1 from "../assets/img1.jpg";
 import img2 from "../assets/img2.jpg";
 import img3 from "../assets/img3.jpg";
 import { useDispatch, useSelector } from "react-redux";
-import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
 import { signInFailure, signInStart, signInSuccess } from "../redux/userSlice";
 import { BASE_URL } from "../api";
 import axios from "axios";
+import {app} from "../firebase"; // Import the initialized Firebase app
 
 const theme = createTheme({
   palette: {
@@ -38,18 +39,20 @@ export default function LandingPage() {
     try {
       dispatch(signInStart());
       const provider = new GoogleAuthProvider();
-      const auth = getAuth();
+      const auth = getAuth(app); // Pass the initialized app instance here
       const result = await signInWithPopup(auth, provider);
+
       const formData = {
         username: result.user.displayName,
         email: result.user.email,
         avatar: result.user.photoURL,
       };
-      const response = await axios.post(
-        `${BASE_URL}/auth/google-sign-in`,
-        formData
-      );
+
+      // Save user data to the backend and fetch user information
+      const response = await axios.post(`${BASE_URL}/auth/google-sign-in`, formData);
       dispatch(signInSuccess(response.data.user));
+
+      // Navigate to the desired route after successful sign-in
       navigate("/sign-in");
     } catch (error) {
       console.error("Google Sign-In Error:", error);
