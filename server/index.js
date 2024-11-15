@@ -5,6 +5,7 @@ const mongoDB = require("./config/db");
 const authRoutes = require("./routes/auth.route");
 const userRoutes = require("./routes/user.route");
 const resumeRoutes = require("./routes/resume.route");
+const path = require('path');
 
 const app = express();
 
@@ -15,8 +16,15 @@ dotenv.config();
 mongoDB();
 
 app.use(express.json());
+
+// Corrected path handling
+const buildPath = path.join(__dirname, "../client/dist");
+app.use(express.static(buildPath));
+
 //middlewares
-app.use(cors());
+app.use(cors({
+  origin: "*",
+}));
 
 //routes
 app.use("/api/auth", authRoutes);
@@ -35,7 +43,7 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
+// Start the server
 app.listen(process.env.PORT, () => {
-  //  console.log(`Server is working on https://resume-builder-mern-eight.vercel.app:${process.env.PORT}`);
   console.log(`Server is working on http://localhost:${process.env.PORT}`);
 });
